@@ -1,0 +1,22 @@
+function binary_search(array, value) {
+      //[15, 13, 9, 7, 4, 3, 0];
+      //var value = 8;
+
+
+      var upper = 0;
+      var lower = array.length - 1;
+      if (lower < 0) {
+        return 0;
+      }
+      while(upper <= lower) {
+        var mid = Math.floor((upper + lower) / 2);
+        var current_value = array[mid];
+        if (current_value >= value) {
+          upper = mid + 1;
+        } else {
+        // else (current_value < value)
+          lower = mid - 1;
+        }
+      }
+      return mid + 1;
+    }

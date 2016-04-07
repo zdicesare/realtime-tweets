@@ -1,0 +1,4 @@
+<div id="responses" class="container">
+  <div id="tweet-collection" class="row tweet-row">
+  </div>
+</div>
