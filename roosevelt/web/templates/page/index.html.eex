@@ -1,4 +1,4 @@
-<div id="responses" class="container">
-  <div id="tweet-collection" class="row tweet-row">
-  </div>
+<div id="responses" style="text-align: center" class="container">
+  <ol id="tweet-collection" class="row tweet-row">
+  </ol>
 </div>

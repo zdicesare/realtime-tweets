@@ -35,19 +35,19 @@ class App {
 
     let backfill = function(tweet) {
       $("#default-message").remove();
-      var body = "<div class='tweet-container col-md-3 tweet-col' data-popularity='" + tweet.popularity + "'>" + tweet.html + "</div>";
+      var body = "<li class='tweet-container tweet-col " + visibility + "' data-popularity='" + tweet.popularity + "'>" + tweet.html + "</li>";
       $("#tweet-collection").append(body);
       twttr.widgets.load();
     }
 
     let update = function(msg) {
       $("#default-message").remove();
-      var body = "<div class='tweet-container col-md-3 tweet-col' data-popularity='" + msg.tweet.popularity + "'>" + msg.tweet.html + "</div>";
+      var body = "<li class='tweet-container tweet-col " + visibility + " data-popularity='" + msg.tweet.popularity + "'>" + msg.tweet.html + "</li>";
       if (msg.index == 0) {
         $("#tweet-collection").prepend(body);
       }
       else {
-        $("#tweet-collection > div:nth-child(" + (msg.index) + ")").after(body);
+        $("#tweet-collection > li:nth-child(" + (msg.index) + ")").after(body);
       }
       if ($(".tweet-container").length == 50) {
         $(".tweet-col:last-child").remove();
