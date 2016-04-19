@@ -33,25 +33,7 @@ class App {
       $("#tweet-collection").append(msg.html);
     }
 
-    let backfill = function(tweet) {
-      count++;
-      var visibility;
-      if (count > displayable) {
-        visibility = "tweet-hide"
-      }
-      else {
-        visibility = "tweet-show"
-      }
-
-      $("#default-message").remove();
-      var body = "<li class='tweet-container tweet-col " + visibility + "' data-popularity='" + tweet.popularity + "'>" + tweet.html + "</li>";
-      $("#tweet-collection").append(body);
-      twttr.widgets.load();
-      $("#tweet-count").html("Currently tracking " + count + " tweets. ");
-
-    }
-
-    let update = function(msg) {
+    let add_tweet = function(msg) {
       count++;
       var visibility;
       if (count > displayable) {
@@ -113,8 +95,8 @@ class App {
     chan.onError(e => console.log("something went wrong", e))
     chan.onClose(e => console.log("channel closed", e))
     chan.on("new:default", default_msg);
-    chan.on("new:backfill", backfill);
-    chan.on("new:response", update);
+    chan.on("new:backfill", add_tweet);
+    chan.on("new:response", add_tweet);
   }
 
 }
