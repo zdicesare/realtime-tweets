@@ -34,13 +34,33 @@ class App {
     }
 
     let backfill = function(tweet) {
+      count++;
+      var visibility;
+      if (count > displayable) {
+        visibility = "tweet-hide"
+      }
+      else {
+        visibility = "tweet-show"
+      }
+
       $("#default-message").remove();
       var body = "<li class='tweet-container tweet-col " + visibility + "' data-popularity='" + tweet.popularity + "'>" + tweet.html + "</li>";
       $("#tweet-collection").append(body);
       twttr.widgets.load();
+      $("#tweet-count").html("Currently tracking " + count + " tweets. ");
+
     }
 
     let update = function(msg) {
+      count++;
+      var visibility;
+      if (count > displayable) {
+        visibility = "tweet-hide"
+      }
+      else {
+        visibility = "tweet-show"
+      }
+
       $("#default-message").remove();
       var body = "<li class='tweet-container tweet-col " + visibility + " data-popularity='" + msg.tweet.popularity + "'>" + msg.tweet.html + "</li>";
       if (msg.index == 0) {
@@ -53,7 +73,33 @@ class App {
         $(".tweet-col:last-child").remove();
       }
       twttr.widgets.load();
+      $("#tweet-count").html("Currently tracking " + count + " tweets. ");
     }
+
+    let show_more = function(event, limit) {
+      event.preventDefault();
+      displayable = limit;
+      $("#tweet-collection > li:lt(" + (displayable) + ")").removeClass("tweet-hide").addClass("tweet-show");
+      $("#tweet-collection > li:gt(" + (displayable - 1) + ")").removeClass("tweet-show").addClass("tweet-hide");
+      $(".active").removeClass("active");
+      $("#show-" + limit).parent().addClass("active");
+    }
+
+    var displayable = 10;
+    var count = 0;
+
+    $("#show-10").bind("click", function(event) {
+      show_more(event, 10);
+    });
+
+
+    $("#show-25").bind("click", function(event) {
+      show_more(event, 25);
+    });
+
+    $("#show-50").bind("click", function(event) {
+      show_more(event, 50);
+    });
 
     socket.connect({})
     socket.onOpen( ev => console.log("OPEN", ev) )

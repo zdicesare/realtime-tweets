@@ -28,6 +28,10 @@
    display: inline !important;
 }
 
+body {
+  padding-bottom: 60px;
+}
+
 /* Space out content a bit */
 header {
   margin-top: 20px;

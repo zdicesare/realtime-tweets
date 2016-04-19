@@ -12,7 +12,9 @@
   </head>
 
   <body>
+
     <div class="container">
+
       <header class="header">
         <span class="logo"></span>
       </header>
@@ -27,5 +29,14 @@
     </div> <!-- /container -->
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
     <script id="twitter-wjs" type="text/javascript" async defer src="//platform.twitter.com/widgets.js"></script>
+
+    <nav class="navbar navbar-default navbar-fixed-bottom">
+    <ul class="nav navbar-nav"><li><div class="container navbar-left"><p class="navbar-text" id="tweet-count">Currently tracking 0 tweets.</p></div></li>
+        <li><a href="#top" class="navbar-link">Back to top</a></li>
+        <li class="active"><a href="#" id="show-10" class="navbar-link">Show top 10</a></li>
+        <li><a href="#" id="show-25" class="navbar-link">Show top 25</a></li>
+        <li><a href="#" id="show-50" class="navbar-link">Show top 50</a></li>
+
+    </nav>
  </body>
 </html>
