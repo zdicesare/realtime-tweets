@@ -12,8 +12,8 @@ defmodule Roosevelt.RedisChannel do
       [] ->
         send self, {:after_join, :empty}
       _ ->
-        Enum.each tweet_list, fn tweet ->
-          send self, {:after_join, tweet}
+        tweet_list |> Enum.with_index |> Enum.each fn {tweet, index} ->
+          send self, {:after_join, %{tweet: tweet, index: index}}
         end
     end
   end

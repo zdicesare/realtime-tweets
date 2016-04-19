@@ -33,27 +33,55 @@ class App {
       $("#tweet-collection").append(msg.html);
     }
 
-    let backfill = function(tweet) {
-      $("#default-message").remove();
-      var body = "<div class='tweet-container col-md-3 tweet-col' data-popularity='" + tweet.popularity + "'>" + tweet.html + "</div>";
-      $("#tweet-collection").append(body);
-      twttr.widgets.load();
-    }
+    let add_tweet = function(msg) {
+      count++;
+      var visibility;
+      if (count > displayable) {
+        visibility = "tweet-hide"
+      }
+      else {
+        visibility = "tweet-show"
+      }
 
-    let update = function(msg) {
       $("#default-message").remove();
-      var body = "<div class='tweet-container col-md-3 tweet-col' data-popularity='" + msg.tweet.popularity + "'>" + msg.tweet.html + "</div>";
+      var body = "<li class='tweet-container tweet-col " + visibility + " data-popularity='" + msg.tweet.popularity + "'>" + msg.tweet.html + "</li>";
       if (msg.index == 0) {
         $("#tweet-collection").prepend(body);
       }
       else {
-        $("#tweet-collection > div:nth-child(" + (msg.index) + ")").after(body);
+        $("#tweet-collection > li:nth-child(" + (msg.index) + ")").after(body);
       }
       if ($(".tweet-container").length == 50) {
         $(".tweet-col:last-child").remove();
       }
       twttr.widgets.load();
+      $("#tweet-count").html("Currently tracking " + count + " tweets. ");
     }
+
+    let show_more = function(event, limit) {
+      event.preventDefault();
+      displayable = limit;
+      $("#tweet-collection > li:lt(" + (displayable) + ")").removeClass("tweet-hide").addClass("tweet-show");
+      $("#tweet-collection > li:gt(" + (displayable - 1) + ")").removeClass("tweet-show").addClass("tweet-hide");
+      $(".active").removeClass("active");
+      $("#show-" + limit).parent().addClass("active");
+    }
+
+    var displayable = 10;
+    var count = 0;
+
+    $("#show-10").bind("click", function(event) {
+      show_more(event, 10);
+    });
+
+
+    $("#show-25").bind("click", function(event) {
+      show_more(event, 25);
+    });
+
+    $("#show-50").bind("click", function(event) {
+      show_more(event, 50);
+    });
 
     socket.connect({})
     socket.onOpen( ev => console.log("OPEN", ev) )
@@ -67,8 +95,8 @@ class App {
     chan.onError(e => console.log("something went wrong", e))
     chan.onClose(e => console.log("channel closed", e))
     chan.on("new:default", default_msg);
-    chan.on("new:backfill", backfill);
-    chan.on("new:response", update);
+    chan.on("new:backfill", add_tweet);
+    chan.on("new:response", add_tweet);
   }
 
 }
