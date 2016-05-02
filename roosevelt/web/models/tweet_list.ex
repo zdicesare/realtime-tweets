@@ -18,13 +18,9 @@ defmodule Roosevelt.TweetList do
     {:ok, initial_state}
   end
 
-  def tweet_list do
-    GenServer.call(__MODULE__, :tweet_list)
-  end
+  def tweet_list, do: GenServer.call(__MODULE__, :tweet_list)
 
-  def handle_call(:tweet_list, _from, state) do
-    {:reply, state, state}
-  end
+  def handle_call(:tweet_list, _from, state), do: {:reply, state, state}
 
   def handle_cast(tweet, state) do
     parsed_tweet = parse_json tweet
@@ -40,7 +36,5 @@ defmodule Roosevelt.TweetList do
     {:noreply, new_state}
   end
 
-  defp parse_json(json) do
-    Poison.Parser.parse! json
-  end
+  defp parse_json(json), do: Poison.Parser.parse! json
 end
