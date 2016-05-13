@@ -26,7 +26,7 @@ defmodule Roosevelt.TweetList do
     result = Enum.find_index(state, fn x -> x["popularity"] < parsed_tweet["popularity"] end)
     index = case result do
               nil ->
-                0
+                length state
               _ ->
                 result
             end
