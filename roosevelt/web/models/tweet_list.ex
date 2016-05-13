@@ -7,7 +7,6 @@ defmodule Roosevelt.TweetList do
 
   def init(initial_state) do
     {:ok, client_sub} = Exredis.Sub.start_link
-    pid = Kernel.self
     client_sub |> Exredis.Sub.subscribe "storm_tweet_feed", fn(msg) ->
       case msg do
         {:message, _, tweet, _} ->
