@@ -1,5 +1,4 @@
 defmodule Roosevelt.TweetListTest do
-  require IEx
   use Roosevelt.ModelCase, async: false
 
   setup_all do
@@ -20,7 +19,6 @@ defmodule Roosevelt.TweetListTest do
 
   test "keeps tweets sorted descending by priority", context do
     {:noreply, state_with_two_tweets} = Roosevelt.TweetList.handle_cast(context[:popular_tweet], context[:initial_state])
-    IEx.pry
     assert hd(state_with_two_tweets)["id"] == "2"
 
     {:noreply, state_with_three_tweets} = Roosevelt.TweetList.handle_cast(context[:unpopular_tweet], state_with_two_tweets)
