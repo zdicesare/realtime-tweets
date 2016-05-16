@@ -7,7 +7,6 @@ defmodule Roosevelt.TweetList do
 
   def init(initial_state) do
     {:ok, client_sub} = Exredis.Sub.start_link
-    pid = Kernel.self
     client_sub |> Exredis.Sub.subscribe "storm_tweet_feed", fn(msg) ->
       case msg do
         {:message, _, tweet, _} ->
@@ -18,20 +17,16 @@ defmodule Roosevelt.TweetList do
     {:ok, initial_state}
   end
 
-  def tweet_list do
-    GenServer.call(__MODULE__, :tweet_list)
-  end
+  def tweet_list, do: GenServer.call(__MODULE__, :tweet_list)
 
-  def handle_call(:tweet_list, _from, state) do
-    {:reply, state, state}
-  end
+  def handle_call(:tweet_list, _from, state), do: {:reply, state, state}
 
   def handle_cast(tweet, state) do
     parsed_tweet = parse_json tweet
-    result = Enum.find_index(state, fn x -> x["popularity"] < parsed_tweet["popularity"] end)
+    result = Enum.find_index(state, fn x -> less_popular? x, parsed_tweet end)
     index = case result do
               nil ->
-                0
+                length state
               _ ->
                 result
             end
@@ -40,7 +35,11 @@ defmodule Roosevelt.TweetList do
     {:noreply, new_state}
   end
 
-  defp parse_json(json) do
-    Poison.Parser.parse! json
+  defp parse_json(json), do: Poison.Parser.parse! json
+
+  defp less_popular?(tweet_one, tweet_two) do
+    {popularity_one, _} = Integer.parse tweet_one["popularity"]
+    {popularity_two, _} = Integer.parse tweet_two["popularity"]
+    popularity_one < popularity_two
   end
 end
