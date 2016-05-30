@@ -23,23 +23,36 @@ defmodule Roosevelt.TweetList do
 
   def handle_cast(tweet, state) do
     parsed_tweet = parse_json tweet
-    result = Enum.find_index(state, fn x -> less_popular? x, parsed_tweet end)
-    index = case result do
-              nil ->
-                length state
-              _ ->
-                result
-            end
-    new_state = List.insert_at(state, index, parsed_tweet) |> Enum.take(50)
-    Roosevelt.Endpoint.broadcast "redis:listen", "new:response", %{tweet: parsed_tweet, index: index}
-    {:noreply, new_state}
+    {deleted_state, deletion_index} = delete_if_needed state, parsed_tweet
+    {inserted_state, insertion_index} = insert deleted_state, parsed_tweet
+    Roosevelt.Endpoint.broadcast "redis:listen", "new:response", %{tweet: parsed_tweet, insertion_index: insertion_index, deletion_index: deletion_index}
+    {:noreply, inserted_state}
   end
 
   defp parse_json(json), do: Poison.Parser.parse! json
 
   defp less_popular?(tweet_one, tweet_two) do
-    {popularity_one, _} = Integer.parse tweet_one["popularity"]
-    {popularity_two, _} = Integer.parse tweet_two["popularity"]
+    {popularity_one, _} = Float.parse tweet_one["popularity"]
+    {popularity_two, _} = Float.parse tweet_two["popularity"]
     popularity_one < popularity_two
+  end
+
+  defp delete_if_needed(list, tweet) do
+    case Enum.find_index(list, fn x -> x["id"] == tweet["id"] end) do
+      nil ->
+        {list, nil}
+      x ->
+        {List.delete_at(list, x), x}
+    end
+  end
+
+  defp insert(list, tweet) do
+    insertion_index = case Enum.find_index(list, fn x -> less_popular? x, tweet end) do
+                        nil ->
+                          length list
+                        result ->
+                          result
+                      end
+    {List.insert_at(list, insertion_index, tweet) |> Enum.take(50), insertion_index}
   end
 end

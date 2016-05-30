@@ -1,5 +1,9 @@
 package realtime_tweets;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -36,10 +40,16 @@ public class PopularityBolt extends BaseRichBolt {
       Twitter twitter = new TwitterFactory().getInstance();
       long[] longs = keys.stream().mapToLong(i -> Long.valueOf(i)).toArray();
       ResponseList<Status> responses = twitter.lookup(longs);
+      LocalDateTime end = LocalDateTime.now();
 
       for(Status status: responses) {
         HashMap<String, String> tweet = (HashMap<String, String>) objects.get(String.valueOf(status.getId()));
-        tweet.put("popularity",  String.valueOf(status.getRetweetCount() + status.getFavoriteCount()));
+        LocalDateTime start = LocalDateTime.ofInstant(Instant.ofEpochMilli(status.getCreatedAt().getTime()), ZoneId.systemDefault());
+        Duration d;
+        d = Duration.between(start, end);
+
+        double f = (((double) status.getRetweetCount() + (double) status.getFavoriteCount()) / d.getSeconds()) * 100;
+        tweet.put("popularity",  String.valueOf(f));
         _collector.emit(tuple, new Values(status.getId(), tweet));
       }
       _collector.ack(tuple);
