@@ -10,6 +10,7 @@ defmodule Roosevelt.TweetListTest do
 
   test "updates internal list when receiving new tweets" do
      Roosevelt.Fixtures.publish_tweet %{popularity: 1, id: 5}
+     # TODO: Give tests some love
      # There's a race condition in that the assertion can execute before
      # the pubsub callback in TweetList. This sleep is a code smell, and
      # ideally Exredis should be mocked out of the tests entirely, anyways.
