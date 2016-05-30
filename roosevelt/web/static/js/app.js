@@ -33,10 +33,21 @@ class App {
       $("#tweet-collection").append(msg.html);
     }
 
-    let add_tweet = function(msg) {
-      count++;
+    let remove_tweet = function(msg) {
+      $(".tweet-container[data-id=" + msg.tweet.id + "]").remove()
+      $(".tweet-container:eq(" + (displayable - 1) + ")").removeClass("tweet-hide").addClass("tweet-show");
+    }
+
+    let update_list = function(msg) {
+      if(msg.deletion_index != null) {
+        remove_tweet(msg)
+      }
+      else {
+        count++;
+      }
+
       var visibility;
-      if (count > displayable) {
+      if (msg.insertion_index >= displayable) {
         visibility = "tweet-hide"
       }
       else {
@@ -44,15 +55,16 @@ class App {
       }
 
       $("#default-message").remove();
-      var body = "<li class='tweet-container tweet-col " + visibility + " data-popularity='" + msg.tweet.popularity + "'>" + msg.tweet.html + "</li>";
-      if (msg.index == 0) {
-        $("#tweet-collection").prepend(body);
+      var body = "<li class='tweet-container tweet-col " + visibility + "' data-id='" + msg.tweet.id + "' data-popularity='" + msg.tweet.popularity + "'>" + msg.tweet.html + "</li>";
+      if (msg.insertion_index == 0) {
+        $("#tweet-collection").prepend(body)
       }
       else {
-        $("#tweet-collection > li:nth-child(" + (msg.index) + ")").after(body);
+        $("#tweet-collection > li:nth-child(" + (msg.insertion_index) + ")").after(body)
       }
+
       if ($(".tweet-container").length == 50) {
-        $(".tweet-col:last-child").remove();
+        $(".tweet-col:last-child").remove()
       }
       twttr.widgets.load();
       $("#tweet-count").html("Currently tracking " + count + " tweets. ");
@@ -95,8 +107,8 @@ class App {
     chan.onError(e => console.log("something went wrong", e))
     chan.onClose(e => console.log("channel closed", e))
     chan.on("new:default", default_msg);
-    chan.on("new:backfill", add_tweet);
-    chan.on("new:response", add_tweet);
+    chan.on("new:backfill", update_list);
+    chan.on("new:response", update_list);
   }
 
 }

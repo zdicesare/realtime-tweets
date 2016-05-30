@@ -11,6 +11,6 @@ defmodule Roosevelt.RedisChannelTest do
 
   test "receives a broadcast when new tweet is added" do
     Roosevelt.Fixtures.publish_tweet(%{id: 4, popularity: 1})
-    assert_broadcast "new:response", %{tweet: _, index: _}
+    assert_broadcast "new:response", %{tweet: _, insertion_index: _, deletion_index: _}
   end
 end
