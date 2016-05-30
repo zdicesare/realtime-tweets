@@ -5,7 +5,7 @@ we get the HTML to display it from Twitter's oEmbed API, and assign them an init
 
 ## Setup
 
-Dependencies are managed with Maven, otherwise only Redis needs to be running in the background with default settings. Additionally, a `twitter4j.properties` file must be present in the `storm` directory, containing your Twitter API credentials.
+Dependencies are managed with Maven, otherwise only Redis needs to be running in the background with default settings. Additionally, a [twitter4j.properties](http://twitter4j.org/en/configuration.html) file must be present in the `storm` directory, containing your Twitter API credentials.
 
 To filter Twitter's streaming API to a particular set of keywords, pass them as arguments to `main`.
 
