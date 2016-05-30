@@ -30,23 +30,24 @@ class App {
      })
 
     let default_msg = function(msg) {
-      $("#tweet-collection").append(msg.html);
+      $("#tweet-collection").append(msg.html)
     }
 
     let remove_tweet = function(msg) {
       $(".tweet-container[data-id=" + msg.tweet.id + "]").remove()
-      $(".tweet-container:eq(" + (displayable - 1) + ")").removeClass("tweet-hide").addClass("tweet-show");
+      $(".tweet-container:eq(" + (displayable - 1) + ")").removeClass("tweet-hide").addClass("tweet-show")
     }
 
     let update_list = function(msg) {
+      $("#default-message").remove()
       if(msg.deletion_index != null) {
         remove_tweet(msg)
       }
       else {
-        count++;
+        count++
       }
 
-      var visibility;
+      var visibility
       if (msg.insertion_index >= displayable) {
         visibility = "tweet-hide"
       }
@@ -54,8 +55,8 @@ class App {
         visibility = "tweet-show"
       }
 
-      $("#default-message").remove();
-      var body = "<li class='tweet-container tweet-col " + visibility + "' data-id='" + msg.tweet.id + "' data-popularity='" + msg.tweet.popularity + "'>" + msg.tweet.html + "</li>";
+      var body = "<li class='tweet-container tweet-col " + visibility + "' data-id='" + msg.tweet.id + "' data-popularity='" + msg.tweet.popularity + "'>" + msg.tweet.html + "</li>"
+
       if (msg.insertion_index == 0) {
         $("#tweet-collection").prepend(body)
       }
@@ -70,34 +71,34 @@ class App {
       if ($(".tweet-container").length == 51) {
         $(".tweet-container:last").remove()
       }
-      twttr.widgets.load();
-      $("#tweet-count").html("Currently tracking " + count + " tweets. ");
+      twttr.widgets.load()
+      $("#tweet-count").html("Currently tracking " + count + " tweets. ")
     }
 
     let show_more = function(event, limit) {
-      event.preventDefault();
-      displayable = limit;
-      $("#tweet-collection > li:lt(" + (displayable) + ")").removeClass("tweet-hide").addClass("tweet-show");
-      $("#tweet-collection > li:gt(" + (displayable - 1) + ")").removeClass("tweet-show").addClass("tweet-hide");
-      $(".active").removeClass("active");
-      $("#show-" + limit).parent().addClass("active");
+      event.preventDefault()
+      displayable = limit
+      $("#tweet-collection > li:lt(" + (displayable) + ")").removeClass("tweet-hide").addClass("tweet-show")
+      $("#tweet-collection > li:gt(" + (displayable - 1) + ")").removeClass("tweet-show").addClass("tweet-hide")
+      $(".active").removeClass("active")
+      $("#show-" + limit).parent().addClass("active")
     }
 
-    var displayable = 10;
-    var count = 0;
+    var displayable = 10
+    var count = 0
 
     $("#show-10").bind("click", function(event) {
-      show_more(event, 10);
-    });
+      show_more(event, 10)
+    })
 
 
     $("#show-25").bind("click", function(event) {
-      show_more(event, 25);
-    });
+      show_more(event, 25)
+    })
 
     $("#show-50").bind("click", function(event) {
-      show_more(event, 50);
-    });
+      show_more(event, 50)
+    })
 
     socket.connect({})
     socket.onOpen( ev => console.log("OPEN", ev) )
@@ -110,9 +111,9 @@ class App {
                .after(10000, () => console.log("Connection interruption"))
     chan.onError(e => console.log("something went wrong", e))
     chan.onClose(e => console.log("channel closed", e))
-    chan.on("new:default", default_msg);
-    chan.on("new:backfill", update_list);
-    chan.on("new:response", update_list);
+    chan.on("new:default", default_msg)
+    chan.on("new:backfill", update_list)
+    chan.on("new:response", update_list)
   }
 
 }
