@@ -76,7 +76,7 @@ public class RedisSpout extends BaseRichSpout {
 
       Jedis jedis = pool.getResource();
       try {
-        jedis.subscribe(listener, "bar");
+        jedis.subscribe(listener, "storm_tweet_batch");
       } finally {
         pool.returnResource(jedis);
       }

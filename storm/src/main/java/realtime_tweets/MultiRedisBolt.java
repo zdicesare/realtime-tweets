@@ -35,7 +35,7 @@ public class MultiRedisBolt extends AbstractRedisBolt {
       Jedis jedis = (Jedis) jedisCommand;
      jedis.publish("storm_tweet_feed", new ObjectMapper().writeValueAsString(tuple.getValue(1)));
       if (count == 99) {
-        jedis.publish("bar", new ObjectMapper().writeValueAsString(tweet_list));
+        jedis.publish("storm_tweet_batch", new ObjectMapper().writeValueAsString(tweet_list));
         count = 0;
         tweet_list = new HashMap<String, HashMap<String, String>>();
       }
