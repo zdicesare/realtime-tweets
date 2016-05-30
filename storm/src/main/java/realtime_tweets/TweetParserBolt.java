@@ -46,13 +46,7 @@ public class TweetParserBolt extends BaseRichBolt {
         request.MaxWidth(550);
         stripped_status.put("html", twitter.getOEmbed(request).getHtml());
         stripped_status.put("id", String.valueOf(status.getId()));
-        //LocalDateTime start = LocalDateTime.ofInstant(Instant.ofEpochMilli(status.getCreatedAt().getTime()), ZoneId.systemDefault());
-        //LocalDateTime end = LocalDateTime.now();
-        //LocalDateTime end = (LocalDateTime) tuple.getValue(1);
-        //Duration d;
-        //d = Duration.between(start, end);
-        //System.out.println(d.getSeconds());
-        stripped_status.put("popularity", String.valueOf(status.getRetweetCount() + status.getFavoriteCount()));
+        stripped_status.put("popularity", String.valueOf(0));
         _collector.emit(tuple, new Values(status.getId(), stripped_status));
 
       } catch (TwitterException e) {

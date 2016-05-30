@@ -38,8 +38,8 @@ defmodule Roosevelt.TweetList do
   defp parse_json(json), do: Poison.Parser.parse! json
 
   defp less_popular?(tweet_one, tweet_two) do
-    {popularity_one, _} = Integer.parse tweet_one["popularity"]
-    {popularity_two, _} = Integer.parse tweet_two["popularity"]
+    {popularity_one, _} = Float.parse tweet_one["popularity"]
+    {popularity_two, _} = Float.parse tweet_two["popularity"]
     popularity_one < popularity_two
   end
 end
