@@ -63,8 +63,12 @@ class App {
         $("#tweet-collection > li:nth-child(" + (msg.insertion_index) + ")").after(body)
       }
 
-      if ($(".tweet-container").length == 50) {
-        $(".tweet-col:last-child").remove()
+      if ($(".tweet-show").length > displayable) {
+        $(".tweet-show:last").removeClass("tweet-show").addClass("tweet-hide")
+      }
+
+      if ($(".tweet-container").length == 51) {
+        $(".tweet-container:last").remove()
       }
       twttr.widgets.load();
       $("#tweet-count").html("Currently tracking " + count + " tweets. ");
