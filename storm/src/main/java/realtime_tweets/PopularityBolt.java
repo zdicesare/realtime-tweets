@@ -24,6 +24,11 @@ import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 
 public class PopularityBolt extends BaseRichBolt {
+	/**
+	 * Receives a batch of 100 JSONified tweets from RedisSpout, deserializes them, and then performs a bulk lookup via Twitter's
+	 * API. It emits 1 tuple for each tweet, containing an updated popularity value that is computed from the number of retweets,
+	 * favorites, and the age of the tweet. These are then picked up again by the MultiRedisBolt.
+	 */
   OutputCollector _collector;
 
   @Override

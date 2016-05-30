@@ -15,6 +15,9 @@ import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Values;
 
 public class TwitterSpout extends BaseRichSpout {
+	/**
+	 * Connects to Twitter's streaming API, with a set of keywords to filter by
+	 */
   SpoutOutputCollector _collector;
   LinkedBlockingQueue<Status> queue = null;
   TwitterStream _twitterStream;

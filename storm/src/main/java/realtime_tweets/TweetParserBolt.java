@@ -16,6 +16,9 @@ import backtype.storm.task.OutputCollector;
 import backtype.storm.task.TopologyContext;
 
 public class TweetParserBolt extends BaseRichBolt {
+	/**
+	 * Receives a tweet from TwitterSpout and obtains the HTML to render on a page for that tweet from Twitter's oEmbed API
+	 */
   OutputCollector _collector;
   HashMap<String, String> stripped_status;
 
@@ -31,13 +34,14 @@ public class TweetParserBolt extends BaseRichBolt {
     Status status = (Status) tuple.getValue(0);
     if(!status.isRetweet()) {
       try {
+        // Twitter's OEmbed API is not rate limited and does not require authentication, but apparently if you provide authentication anyways, they count the requests
+        // against your limits. So we override our actual credentials in the twitter4j.properties file
         ConfigurationBuilder cb = new ConfigurationBuilder()
           .setOAuthConsumerKey("")
           .setOAuthConsumerSecret("")
           .setOAuthAccessToken("")
           .setOAuthAccessTokenSecret("");
         Twitter twitter = new TwitterFactory(cb.build()).getInstance();
-
 
         OEmbedRequest request = new OEmbedRequest(status.getId(), "");
         request.HideMedia(true);

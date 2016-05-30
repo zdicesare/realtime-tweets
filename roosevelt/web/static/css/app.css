@@ -22,6 +22,7 @@
    font-size: 0px;
 }
 
+/* These are necessary to override the styles on the top level Twitter widgets */
 .twitter-tweet-rendered {
    margin-top: 0px !important;
    margin-bottom: 0px !important;

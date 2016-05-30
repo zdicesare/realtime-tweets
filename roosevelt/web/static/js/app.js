@@ -38,8 +38,10 @@ class App {
       $(".tweet-container:eq(" + (displayable - 1) + ")").removeClass("tweet-hide").addClass("tweet-show")
     }
 
+    // Main function for adding and updating tweets
     let update_list = function(msg) {
       $("#default-message").remove()
+      // If its an updated tweet, remove the old one first
       if(msg.deletion_index != null) {
         remove_tweet(msg)
       }
@@ -71,6 +73,7 @@ class App {
       if ($(".tweet-container").length == 51) {
         $(".tweet-container:last").remove()
       }
+      // Styles the tweets, part of Twitter's oEmbed API and pattern
       twttr.widgets.load()
       $("#tweet-count").html("Currently tracking " + count + " tweets. ")
     }
@@ -85,6 +88,8 @@ class App {
     }
 
     var displayable = 10
+    // TODO: This count is only really accurate if the browser window has been open since the Storm side started. So, it's really a counter
+    // of how many tweets the JS code has seen, not how many have actually been processed by the entire system.
     var count = 0
 
     $("#show-10").bind("click", function(event) {

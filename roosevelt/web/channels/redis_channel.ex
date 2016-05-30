@@ -1,4 +1,5 @@
 defmodule Roosevelt.RedisChannel do
+  # Handles web sockets for browser clients
   use Phoenix.Channel
 
   def join("redis:listen", _message, socket) do
@@ -6,6 +7,7 @@ defmodule Roosevelt.RedisChannel do
     {:ok, socket}
   end
 
+  # When a new browser client joins, give them our current state
   def backfill(socket) do
     tweet_list = Roosevelt.TweetList.tweet_list
     case tweet_list do
